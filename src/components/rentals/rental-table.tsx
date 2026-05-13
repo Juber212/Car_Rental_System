@@ -3,7 +3,7 @@
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { toast } from "sonner";
-import { Search, Plus, Pencil, CheckCircle, Undo2, Ban } from "lucide-react";
+import { Search, Plus, Pencil, CheckCircle, Undo2, Ban, Download } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import {
@@ -21,6 +21,7 @@ import {
   cancelRental,
 } from "@/lib/actions/rentals";
 import { RentalDialog, type RentalFormData } from "./rental-dialog";
+import { exportToExcel } from "@/lib/export";
 
 interface SelectOption {
   id: string;
@@ -59,6 +60,7 @@ export function RentalTable({ rentals, customers, cars }: RentalTableProps) {
   const [statusFilter, setStatusFilter] = useState<string>("ALL");
   const [dialogOpen, setDialogOpen] = useState(false);
   const [editingRental, setEditingRental] = useState<RentalFormData | null>(null);
+  const [exporting, setExporting] = useState(false);
 
   const filtered = rentals.filter((r) => {
     const matchSearch =
@@ -99,6 +101,35 @@ export function RentalTable({ rentals, customers, cars }: RentalTableProps) {
     setDialogOpen(true);
   };
 
+  const handleExport = () => {
+    setExporting(true);
+    const dataToExport = filtered.length > 0 ? filtered : rentals;
+    const rows = dataToExport.map((r) => {
+      const days =
+        Math.ceil(
+          (new Date(r.endDate).getTime() - new Date(r.startDate).getTime()) /
+            (1000 * 60 * 60 * 24)
+        ) || 1;
+
+      return {
+        orderId: r.id,
+        customerName: r.customer.name,
+        customerPhone: r.customer.phone,
+        carInfo: `${r.car.brand} ${r.car.model}`,
+        carPlate: r.car.plate,
+        startDate: new Date(r.startDate).toLocaleDateString("zh-CN"),
+        endDate: new Date(r.endDate).toLocaleDateString("zh-CN"),
+        days,
+        totalCost: Number(r.totalCost),
+        status: r.status,
+        createdDate: new Date().toLocaleDateString("zh-CN"),
+      };
+    });
+
+    exportToExcel(rows, `租赁订单_${new Date().toLocaleDateString("zh-CN")}`);
+    setExporting(false);
+  };
+
   const handleAdd = () => {
     setEditingRental(null);
     setDialogOpen(true);
@@ -128,6 +159,15 @@ export function RentalTable({ rentals, customers, cars }: RentalTableProps) {
         <Button onClick={handleAdd} size="sm">
           <Plus className="size-4" />
           创建订单
+        </Button>
+        <Button
+          variant="outline"
+          size="sm"
+          onClick={handleExport}
+          disabled={exporting}
+        >
+          <Download className="size-4" />
+          {exporting ? "导出中..." : "导出 Excel"}
         </Button>
       </div>
 
