@@ -8,7 +8,7 @@ async function main() {
   await prisma.car.deleteMany();
   await prisma.customer.deleteMany();
 
-  // Seed cars
+  // Seed cars — statuses will be updated by rental creation
   const cars = await Promise.all([
     prisma.car.create({
       data: {
@@ -40,7 +40,7 @@ async function main() {
         plate: "京A12347",
         color: "Silver",
         dailyRate: 300,
-        status: "RENTED",
+        status: "AVAILABLE",
       },
     }),
     prisma.car.create({
@@ -97,22 +97,64 @@ async function main() {
     }),
   ]);
 
-  // Seed a rental
+  // Seed rentals covering all 4 statuses
+  // 1. ACTIVE rental — 张伟租 Passat（进行中）
   await prisma.rental.create({
     data: {
-      carId: cars[2].id, // The Passat that is RENTED
+      carId: cars[2].id,
       customerId: customers[0].id,
       startDate: new Date("2026-05-10"),
       endDate: new Date("2026-05-17"),
       totalCost: 2100,
       status: "ACTIVE",
+      actualPickupDate: new Date("2026-05-10"),
+    },
+  });
+  await prisma.car.update({ where: { id: cars[2].id }, data: { status: "RENTED" } });
+
+  // 2. RESERVED rental — 李娜预约 Camry（已预约，待取车）
+  await prisma.rental.create({
+    data: {
+      carId: cars[0].id,
+      customerId: customers[1].id,
+      startDate: new Date("2026-05-20"),
+      endDate: new Date("2026-05-23"),
+      totalCost: 1050,
+      status: "RESERVED",
+    },
+  });
+  await prisma.car.update({ where: { id: cars[0].id }, data: { status: "RESERVED" } });
+
+  // 3. COMPLETED rental — 王磊租 Accord（历史订单）
+  await prisma.rental.create({
+    data: {
+      carId: cars[1].id,
+      customerId: customers[2].id,
+      startDate: new Date("2026-04-01"),
+      endDate: new Date("2026-04-03"),
+      totalCost: 640,
+      status: "COMPLETED",
+      actualPickupDate: new Date("2026-04-01"),
+      actualReturnDate: new Date("2026-04-03"),
+    },
+  });
+
+  // 4. CANCELLED rental — 张伟租 BMW（已取消）
+  await prisma.rental.create({
+    data: {
+      carId: cars[3].id,
+      customerId: customers[0].id,
+      startDate: new Date("2026-05-15"),
+      endDate: new Date("2026-05-16"),
+      totalCost: 600,
+      status: "CANCELLED",
     },
   });
 
   console.log("Seed data created:");
   console.log(`  ${cars.length} cars`);
   console.log(`  ${customers.length} customers`);
-  console.log("  1 rental");
+  console.log("  4 rentals (1 ACTIVE, 1 RESERVED, 1 COMPLETED, 1 CANCELLED)");
 }
 
 main()

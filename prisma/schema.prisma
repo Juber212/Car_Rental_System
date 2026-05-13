@@ -15,6 +15,7 @@ enum CarStatus {
 }
 
 enum RentalStatus {
+  RESERVED
   ACTIVE
   COMPLETED
   CANCELLED
@@ -48,16 +49,18 @@ model Customer {
 }
 
 model Rental {
-  id         String       @id @default(cuid())
-  carId      String
-  customerId String
-  startDate  DateTime
-  endDate    DateTime
-  status     RentalStatus @default(ACTIVE)
-  totalCost  Decimal      @db.Decimal(10, 2)
-  notes      String?
-  createdAt  DateTime     @default(now())
-  updatedAt  DateTime     @updatedAt
-  car        Car          @relation(fields: [carId], references: [id])
-  customer   Customer     @relation(fields: [customerId], references: [id])
+  id                String       @id @default(cuid())
+  carId             String
+  customerId        String
+  startDate         DateTime
+  endDate           DateTime
+  actualPickupDate  DateTime?
+  actualReturnDate  DateTime?
+  status            RentalStatus @default(RESERVED)
+  totalCost         Decimal      @db.Decimal(10, 2)
+  notes             String?
+  createdAt         DateTime     @default(now())
+  updatedAt         DateTime     @updatedAt
+  car               Car          @relation(fields: [carId], references: [id])
+  customer          Customer     @relation(fields: [customerId], references: [id])
 }
