@@ -35,14 +35,16 @@ model Car {
 }
 
 model Customer {
-  id        String   @id @default(cuid())
-  name      String
-  phone     String   @unique
-  email     String?
-  idNumber  String   @unique
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-  rentals   Rental[]
+  id                   String   @id @default(cuid())
+  name                 String
+  phone                String   @unique
+  email                String?
+  driverLicenseNumber  String   @unique
+  driverLicenseImage   String?
+  notes                String?
+  createdAt            DateTime @default(now())
+  updatedAt            DateTime @updatedAt
+  rentals              Rental[]
 }
 
 model Rental {

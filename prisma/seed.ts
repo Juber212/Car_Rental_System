@@ -71,25 +71,28 @@ async function main() {
   const customers = await Promise.all([
     prisma.customer.create({
       data: {
-        name: "Zhang Wei",
+        name: "张伟",
         phone: "13800138001",
         email: "zhangwei@example.com",
-        idNumber: "110101199001011234",
+        driverLicenseNumber: "110101199001011234",
+        notes: "老客户，信誉良好",
       },
     }),
     prisma.customer.create({
       data: {
-        name: "Li Na",
+        name: "李娜",
         phone: "13800138002",
         email: "lina@example.com",
-        idNumber: "110101199002021234",
+        driverLicenseNumber: "110101199002021234",
+        driverLicenseImage: "https://example.com/licenses/lina.jpg",
       },
     }),
     prisma.customer.create({
       data: {
-        name: "Wang Lei",
+        name: "王磊",
         phone: "13800138003",
-        idNumber: "110101199003031234",
+        driverLicenseNumber: "110101199003031234",
+        notes: "需确认驾照有效期",
       },
     }),
   ]);

@@ -1,0 +1,65 @@
+继续基于当前项目开发。
+
+不要重构已有代码。
+保持当前项目结构一致。
+保持当前 UI 风格一致。
+
+现在请开发：
+
+客户管理模块（Customers）。
+
+功能：
+- 客户列表
+- 搜索客户
+- 添加客户
+- 编辑客户
+- 删除客户
+- 查看客户历史订单
+
+字段：
+- 姓名
+- 手机号码
+- 邮箱
+- 驾驶证号码
+- 驾驶证照片
+- 备注
+
+技术要求：
+- Prisma
+- Server Actions
+- TypeScript
+- Zod 表单验证
+- shadcn/ui
+- Toast 提示
+
+UI要求：
+- 简洁后台风格
+- 表格展示
+- Modal 表单
+- 支持手机端
+
+数据库要求：
+请同时更新 Prisma schema。
+
+客户表字段：
+- id
+- name
+- phone
+- email
+- driverLicenseNumber
+- driverLicenseImage
+- notes
+- createdAt
+
+请：
+1. 更新 Prisma schema
+2. 生成 migration
+3. 创建 Customers 页面
+4. 创建新增/编辑表单
+5. 创建 Server Actions
+6. 添加表单验证
+7. 添加删除确认
+8. 添加搜索功能
+
+完成后：
+请说明目录结构和下一步建议。
