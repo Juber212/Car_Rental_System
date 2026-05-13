@@ -1,0 +1,41 @@
+继续基于当前项目结构开发。
+
+不要重构已有代码。
+
+现在请开发：
+
+车辆管理模块。
+
+功能：
+- 车辆列表
+- 添加车辆
+- 编辑车辆
+- 删除车辆
+- 搜索车辆
+
+字段：
+- 品牌
+- 型号
+- 年份
+- 车牌号
+- 日租价格
+- 状态
+
+状态：
+- Available
+- Reserved
+- Rented
+- Maintenance
+
+技术要求：
+- Prisma
+- Server Actions
+- shadcn/ui
+- TypeScript
+- 表单验证
+- Toast 提示
+
+UI要求：
+- 简洁后台风格
+- 表格展示
+- Modal 表单
